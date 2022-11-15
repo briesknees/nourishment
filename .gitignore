@@ -1,3 +1,6 @@
 node_modules
 dist/
 credentials/
+.DS_Store
+.gitignore
+.eslintignore
