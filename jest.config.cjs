@@ -1,5 +1,5 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
+module.exports= {
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
   moduleNameMapper: {

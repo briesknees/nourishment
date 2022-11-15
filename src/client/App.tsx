@@ -1,8 +1,13 @@
 import React from 'react'
+import { Login } from './components/Login'
+import { Arboretum } from './components/Arboretum'
 
 const App = () => {
   return (
-    <div>App</div>
+    <div className='Home'>
+      <Login></Login>
+      <Arboretum></Arboretum>
+    </div>
   )
 }
 

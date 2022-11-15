@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack serve",
-    "test": "jest",
+    "test": "jest --verbose",
     "lint": "eslint . --ext .tsx",
     "lint-and-fix": "eslint . --ext .tsx --fix",
     "start": "concurrently \"cross-env NODE_ENV=development webpack-dev-server --open --hot --progress --color \" \"ts-node-dev src/server/server.ts\""
