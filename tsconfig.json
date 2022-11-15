@@ -14,7 +14,8 @@
       "allowJs": true,
       "moduleResolution": "node"
 		},
-		"exclude": ["webpack.config.js"]
+    "include": ["src/**/*"],
+		"exclude": ["webpack.config.cjs"]
 }
 // The target setting changes which JS features are downleveled and which are left intact. For example, an arrow function () => this will be turned into an equivalent function expression if target is ES5 or lower.
 
