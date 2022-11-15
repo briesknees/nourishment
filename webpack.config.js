@@ -56,8 +56,7 @@ module.exports = {
             title: 'Andrew\'s Page', // This is referenced in template.html and auto-inserted when we build
             filename: 'index.html',
             template: 'src/client/template.html',
-        }),
-        new BundleAnalyzerPlugin()
+        })
     ],
     resolve: {
         // Enable importing JS / JSX files without specifying their extension
