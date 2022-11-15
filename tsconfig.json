@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "outDir": "./dist/",
+      "noImplicitAny": true,
+      "module": "commonjs",
+      "rootDir": "./src",
+	    "esModuleInterop": true,  
+      "target": "es5",
+      "jsx": "react",
+      "allowJs": true,
+      "moduleResolution": "node"
+		},
+		"exclude": ["webpack.config.js"]
+}
+// The target setting changes which JS features are downleveled and which are left intact. For example, an arrow function () => this will be turned into an equivalent function expression if target is ES5 or lower.
+

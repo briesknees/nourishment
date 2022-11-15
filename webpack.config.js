@@ -1,11 +1,11 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+
 
 module.exports = {
     mode: 'development',
     entry: {
-        bundle: path.resolve(__dirname, 'src/client/index.js')
+        bundle: path.resolve(__dirname, 'src/client/index.tsx')
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -28,7 +28,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.scss$/,
+                test: /\.s?css$/,
                 use: [
                     'style-loader',
                     'css-loader',
@@ -46,8 +46,13 @@ module.exports = {
                 }
             },
             {
+                test: /\.(ts|tsx)$/,
+                exclude: /node_modules/,
+                use: ['ts-loader'],
+              },
+            {
                 test: /\.(png|svg|jpg|jpeg|gif)$/i, //i makes it case insensitive
-                type: 'asset/resource',
+                type: 'assets/resource'
             }
         ]
     },
@@ -60,6 +65,6 @@ module.exports = {
     ],
     resolve: {
         // Enable importing JS / JSX files without specifying their extension
-        extensions: ['.js', '.jsx'],
+        extensions: ['.js', '.jsx','.tsx', '.ts'],
       },
 }
