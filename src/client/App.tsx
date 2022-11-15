@@ -1,6 +1,6 @@
 import React from 'react'
-import { Login } from './components/Login'
-import { Arboretum } from './components/Arboretum'
+import Login from './components/Login'
+import Arboretum from './components/Arboretum'
 
 const App = () => {
   return (
@@ -10,6 +10,8 @@ const App = () => {
     </div>
   )
 }
+
+
 
 export default App;
 

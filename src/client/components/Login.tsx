@@ -1,9 +1,9 @@
 import React, {useEffect, useState } from 'react'
 
-export function Login(){
+export default function Login(){
     return(
         <div>
-            Hello Kat! 
+            Login Component
         </div>
     )
 };

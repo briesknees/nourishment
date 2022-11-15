@@ -1,8 +1,8 @@
 import React from 'react'
-import { PlantDisplay } from './PlantDisplay'
-import { ShelfStatus } from './ShelfStatus'
+import PlantDisplay from './PlantDisplay'
+import ShelfStatus  from './ShelfStatus'
 
-export function Arboretum (){
+export default function Arboretum (){
     return (
         <div>
         <PlantDisplay></PlantDisplay>
