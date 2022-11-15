@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/client/index.tsx",
-  "type": "module",
   "scripts": {
     "build": "webpack",
     "dev": "webpack serve",
     "test": "jest",
     "lint": "eslint . --ext .tsx",
     "lint-and-fix": "eslint . --ext .tsx --fix",
-    "start": "concurrently \"NODE_ENV=development webpack-dev-server --open --hot --progress --color \" \"ts-node-dev src/server/server.cjs\""
+    "start": "concurrently \"cross-env NODE_ENV=development webpack-dev-server --open --hot --progress --color \" \"ts-node-dev src/server/server.ts\""
   },
   "keywords": [],
   "author": "",

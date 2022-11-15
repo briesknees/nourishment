@@ -1,12 +1,13 @@
-const express = require('express');
-const app = express();
 const cors = require('cors');
+import express from 'express'
+
+const app = express();
 
 const PORT = 8080;
 
 app.use(cors({origin: 'http://localhost:3000'}));
 
-app.get('/', (req, res) => {
+app.get('/', (req: express.Request, res: express.Response) => {
     res.statusCode = 200;
     return res.json({title: 'Coding in Progress'});
 })
