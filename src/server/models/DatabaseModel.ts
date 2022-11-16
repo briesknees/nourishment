@@ -44,7 +44,7 @@ export async function SelectRecords(params: SelectQuery) {
 
   str += ";";
   const response = await query(str, queryParams);
-  console.log(response.rows[0]);
+  console.log(response);
   return response;
 }
 

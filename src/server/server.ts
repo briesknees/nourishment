@@ -25,11 +25,13 @@ console.log(
   SelectRecords({
     table: "users",
     attributes: [{
-      value: "*",
-      type: "email",
+      value: "password",
+      type: "string",
       },
     ],
-    
+    conditions: {
+      where: "username='jonathanzie'"
+    }
   })
 );
 
