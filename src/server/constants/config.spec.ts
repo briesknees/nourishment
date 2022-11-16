@@ -3,12 +3,12 @@ const pg = require("pg");
 
 describe("Config.ts", () => {
   it("Saves all required environment variables from machine", async () => {
-    expect(config.host).not.toBeNull();
-    expect(config.user).not.toBeNull();
-    expect(config.password).not.toBeNull();
+    expect(config.host).not.toBeUndefined();
+    expect(config.user).not.toBeUndefined();
+    expect(config.password).not.toBeUndefined();
     expect(config.database).toBe("postgres");
-    expect(config.port).not.toBeNull();
-    expect(config.ssl).not.toBeNull();
+    expect(config.port).not.toBeUndefined();
+    expect(config.ssl).not.toBeUndefined();
   });
 
   it("Succesfully connects to Database w/ current environment variables", async () => {
