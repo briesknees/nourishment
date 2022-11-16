@@ -4,3 +4,4 @@ credentials/
 .DS_Store
 .eslintignore
 .vscode/
+.env
