@@ -3,10 +3,12 @@ import express from 'express';
 
 const router = express.Router();
 
-router.get('/', (req: Request, res : Response, next : NextFunction) =>
+router.post('/create', (req: Request, res : Response, next : NextFunction) =>
 { 
-  console.error('UserRouter.Get: Not Yet Implemented'); 
+  console.error('AuthRouter.Post: Not Yet Implemented'); 
   res.sendStatus(501); 
 });
+
+
 
 export default router;
