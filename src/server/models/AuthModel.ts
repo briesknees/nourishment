@@ -92,7 +92,29 @@ class AuthModel {
 	}
 
 	//queries db. if username and password pmatches, authenticates the user
-	public static login(req: Request, res: Response, next: NextFunction) {
+	public static async login(req: Request, res: Response, next: NextFunction) {
+    const { username, password } = req.body;
+
+		//query the database for the username and retrieve teh passowrd
+		const params = [{value: username, type: 'VARCHAR'}]
+    
+		const query = 'placeholder'
+		//
+		const db = new pg.client(config);
+		const userData = await db.query(query, [username])
+		if (userData.rows[0] === undefined){
+			return res.status(401).json({error: "username not found"})
+		}
+		const dbPassword = userData.rows[0].password;
+		bcrypt.compare(password, dbPassword, (err, result) => {
+			if (result === true){
+			}
+			else if (result === false){
+
+			}
+			
+		})
+
 
 	}
 
