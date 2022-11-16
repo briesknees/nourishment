@@ -18,10 +18,11 @@ class AuthModel {
 		try {
 			//query to find the user in teh database
 			const verifyUserQuery = `
-			SELECT * FROM users
-			WHERE username = $1`;
-      const db = new pg.client(config);
+			SELECT * FROM users;`
+		//	WHERE username = $1`;
+      const db = pg.client(config);
 			const verifyResult = await db.query(verifyUserQuery, param);
+			console.log(verifyResult)
 			//user does not exist in database
 			if (verifyResult.rows.length === 0){
 				res.locals.status === true;
@@ -108,9 +109,10 @@ class AuthModel {
 		const dbPassword = userData.rows[0].password;
 		bcrypt.compare(password, dbPassword, (err, result) => {
 			if (result === true){
+
 			}
 			else if (result === false){
-
+      
 			}
 			
 		})

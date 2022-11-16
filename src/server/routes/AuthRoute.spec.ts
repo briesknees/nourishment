@@ -82,6 +82,25 @@ describe('Auth route tests', () => {
 		  expect(res.headers).toBe(200)
 		  expect(res.headers.authorization).not.toBe(undefined);
 		})
+		afterAll(done => {
+			server ? server.close(done) : null;
+		})
+	})
+
+	describe('login', () => {
+		let server: Server | null = null;
+		let request = null;
+		beforeAll((done) => {
+			server = app.listen(done);
+			request = supertest.agent(server);
+		});
+    
+	
+
+		afterAll(done => {
+			server ? server.close(done) : null;
+		})
+
 	})
 
 })
