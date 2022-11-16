@@ -3,3 +3,4 @@ dist/
 credentials/
 .DS_Store
 .eslintignore
+.vscode/
