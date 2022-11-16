@@ -1,4 +1,8 @@
-import { CreateTableQuery, InsertQuery, SelectQuery } from "../../types/database";
+import {
+  CreateTableQuery,
+  InsertQuery,
+  SelectQuery,
+} from "../../types/database";
 import db from "./DatabaseModel";
 
 describe("DatabaseModel.CreateTable", () => {
@@ -7,8 +11,8 @@ describe("DatabaseModel.CreateTable", () => {
       name: "Test",
       attributes: [
         ["id", "SERIAL"],
-        ["name", "varchar"],
-        ["race", "varchar"],
+        ["name", "VARCHAR"],
+        ["race", "VARCHAR"],
       ],
     };
 
@@ -21,7 +25,16 @@ describe("DatabaseModel.InsertRecords", () => {
   it("Inserts a Record into the Database ", async () => {
     const query: InsertQuery = {
       table: "Test",
-      attributes: ["name", "race"],
+      attributes: [
+        {
+          value: "name",
+          type: "VARCHAR",
+        },
+        {
+          value: "race",
+          type: "VARCHAR",
+        },
+      ],
       values: ["Sarah Kerrigan", "Zerg"],
     };
 
@@ -44,4 +57,3 @@ describe("DatabaseModel.SelectRecords", () => {
     expect(response.rows[0].race).toBe("Zerg");
   });
 });
-
