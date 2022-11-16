@@ -1,7 +1,6 @@
 import React from "react";
 
-export default function PlantDisplay(){
-    return (
+export const PlantDisplay = (): JSX.Element => {    return (
         <div>
             Plant Display Div!
         </div>
