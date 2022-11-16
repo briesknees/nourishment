@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getNameOfJSDocTypedef } from "typescript";
-import { RootState, AppThunk } from "../../store/store";
+import { RootState, AppThunk } from "../store/store";
 import { fetchTasks } from "./tasksAPI";
 import {
   userData,
@@ -9,7 +9,7 @@ import {
   PlantModel,
   Frequency,
   asyncStatus,
-} from "../../../types/api";
+} from "../../types/api";
 import { response } from "express";
 import { request } from "http";
 
