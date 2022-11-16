@@ -1,12 +1,11 @@
 import express from 'express'
 const cors = require('cors');
 
-import authRouter from './routes/AuthRouter'
-import taskRouter from './routes/TaskRouter'
-import userRouter from './routes/UserRouter'
+import authRouter from './routes/AuthRoute'
+import taskRouter from './routes/TaskRoute'
+import userRouter from './routes/UserRoute'
 
 const app = express();
-const PORT = 8080;
 
 app.use('/api/tasks', taskRouter);
 app.use('/api/auth', authRouter);
@@ -19,8 +18,4 @@ app.get('/api/', (req: express.Request, res: express.Response) => {
     return res.json({title: 'Coding in Progress'});
 })
 
-app.listen(PORT, () => {
-    console.log("Server is listening on Port " + PORT + "...")
-})
-
-module.exports = app;
+export default app;
