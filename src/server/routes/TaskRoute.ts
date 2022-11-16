@@ -8,8 +8,8 @@ router.post("/", (req: Request, res: Response, next: NextFunction) => {
   res.sendStatus(501);
 });
 
-router.patch("/", (req: Request, res: Response, next: NextFunction) => {
-  console.error("TaskRouter.Patch: Not Yet Implemented");
+router.put("/", (req: Request, res: Response, next: NextFunction) => {
+  console.error("TaskRouter.Put: Not Yet Implemented");
   res.sendStatus(501);
 });
 
