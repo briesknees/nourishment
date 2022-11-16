@@ -8,7 +8,10 @@ export interface SelectQuery {
 }
 export interface InsertQuery {
   table: string;
-  attributes: string[];
+  attributes: {
+    value: string;
+    type: string;
+  }[];
   values: string[];
 }
 
