@@ -1,26 +1,23 @@
-import express from 'express'
-const cors = require('cors');
+import express from "express";
+import cors from "cors";
 
-import authRouter from './routes/AuthRouter'
-import taskRouter from './routes/TaskRouter'
-import userRouter from './routes/UserRouter'
+import authRouter from "./routes/AuthRoute";
+import taskRouter from "./routes/TaskRoute";
+import userRouter from "./routes/UserRoute";
 
 const app = express();
-const PORT = 8080;
 
-app.use('/api/tasks', taskRouter);
-app.use('/api/auth', authRouter);
-app.use('/api/user', userRouter);
+app.use("/api/tasks", taskRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/user", userRouter);
 
-app.use(cors({origin: 'http://localhost:3000'}));
+app.use(cors({ origin: "http://localhost:3000" }));
 
-app.get('/api/', (req: express.Request, res: express.Response) => {
-    res.statusCode = 200;
-    return res.json({title: 'Coding in Progress'});
-})
+app.get("/api/", (req: express.Request, res: express.Response) => {
+  res.statusCode = 200;
+  return res.json({ title: "Coding in Progress" });
+});
 
-app.listen(PORT, () => {
-    console.log("Server is listening on Port " + PORT + "...")
-})
+console.log(process.env.AZURE_PSQL_PORT);
 
-module.exports = app;
+export default app;
