@@ -1,8 +1,8 @@
-import counterReducer, {
+import tasksReducer, {
     TaskState,
     increment,
-    decrement,
     addNewTask,
+    deleteTask,
     editCurrentTask
   } from './tasksSlice';
   
@@ -18,30 +18,77 @@ import counterReducer, {
       status: 'idle'
     };
 
+    const newTask = { 
+      taskName: 'Take a walk', 
+      plantName: 'Jenna', 
+      taskDuration: 'Once per day', 
+      plantType: 'snake'
+    };
+
     it('should handle initial state', () => {
-      expect(counterReducer(undefined, { type: 'unknown' })).toEqual({
-        value: 0,
-        status: 'idle',
+      expect(tasksReducer(undefined, { type: 'unknown' })).toEqual({
+        totalTasks: 1,
+        taskList: [{ 
+          taskName: 'Drink water', 
+          plantName: 'Henry', 
+          taskDuration: 'Twice per day', 
+          plantType: 'cactus'
+        }],
+      optionsList: [],
+      status: 'idle'
       });
     });
   
     it('should handle increment', () => {
-      const actual = counterReducer(initialState, increment());
-      expect(actual.value).toEqual(4);
+      const actual = tasksReducer(initialState, increment());
+      expect(actual.totalTasks).toEqual(2);
     });
   
-    it('should handle decrement', () => {
-      const actual = counterReducer(initialState, decrement());
-      expect(actual.value).toEqual(2);
-    });
-  
-    it('should handle incrementByAmount', () => {
-      const actual = counterReducer(initialState, addNewTask(2));
-      expect(actual.value).toEqual(5);
+    it('should handle adding a newTask', () => {
+
+      const largerTaskList = [{ 
+        taskName: 'Drink water', 
+        plantName: 'Henry', 
+        taskDuration: 'Twice per day', 
+        plantType: 'cactus'
+      }, newTask
+    ];
+
+      const actual = tasksReducer(initialState, addNewTask(newTask));
+      expect(actual.taskList).toEqual(largerTaskList);
     });
 
-    it('should handle incrementByAmount', () => {
-      const actual = counterReducer(initialState, editCurrentTask(2));
-      expect(actual.value).toEqual(5);
+    it('should handle updating a task', () => {
+
+      const updatedTask = { 
+        taskName: 'Take a walk', 
+        plantName: 'Jenna', 
+        taskDuration: 'Once per week', // changed the duration
+        plantType: 'snake'
+      };
+
+      const largerTaskListEdited = [{ 
+        taskName: 'Drink water', 
+        plantName: 'Henry', 
+        taskDuration: 'Twice per day', 
+        plantType: 'cactus'
+      }, updatedTask
+    ];
+
+      const actual = tasksReducer(initialState, editCurrentTask(updatedTask));
+      expect(actual.taskList).toEqual(largerTaskListEdited);
+    });
+
+    it('should handle deleting a task', () => {
+
+      const smallerTaskList = [{ 
+        taskName: 'Drink water', 
+        plantName: 'Henry', 
+        taskDuration: 'Twice per day', 
+        plantType: 'cactus'
+    }];
+
+      const actual = tasksReducer(initialState, deleteTask(newTask));
+      expect(actual.taskList).toEqual(smallerTaskList);
     });
   });

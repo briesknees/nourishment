@@ -3,20 +3,22 @@ import { RootState, AppThunk } from '../../store/store';
 import { fetchOptions } from './optionsAPI';
 import { fetchTasks } from './tasksAPI';
 
+// establish types for state items starting with individual task list items
 interface TaskListItem {
   taskName: string; plantName: string; taskDuration: string; plantType: string;
 }
-interface taskList extends Array<TaskListItem>{}
 
-interface OptionListItem {
-  id: number; label: string; key: any
-}
-interface optionsList extends Array<OptionListItem>{}
+// our task list holds 1 to many TaskListItems
+interface taskListType extends Array<TaskListItem>{}
+
+// for the purpose of future expasion we didn't specificy an interface for OptionListItem
+// but we did esure it comes in an array
+interface optionsListType extends Array<any>{}
 
 export interface TaskState {
   totalTasks: number;
-  taskList: taskList,
-  optionsList: optionsList,
+  taskList: taskListType,
+  optionsList: optionsListType,
   status: 'idle' | 'loading' | 'failed';
 }
 
@@ -39,7 +41,16 @@ const initialState: TaskState = {
 export const getTasksAsync = createAsyncThunk(
   'tdd/fetchTasks',
   async (currTasks: (string | number)[]) => {
-    const response = await fetchOptions(currTasks = []);
+    const response = await fetchTasks(currTasks = []);
+    // The value we return becomes the `fulfilled` action payload
+    return response.data;
+  }
+);
+
+export const getOptionsAsync = createAsyncThunk(
+  'tdd/fetchOptions',
+  async (currOptions: (string | number)[]) => {
+    const response = await fetchOptions(currOptions = []);
     // The value we return becomes the `fulfilled` action payload
     return response.data;
   }
@@ -50,6 +61,7 @@ export const tasksSlice = createSlice({
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
   reducers: {
+    // increment is here as an example for testing (will be removed)
     increment: (state) => {
       // Redux Toolkit allows us to write "mutating" logic in reducers. It
       // doesn't actually mutate the state because it uses the Immer library,
@@ -57,17 +69,35 @@ export const tasksSlice = createSlice({
       // immutable state based off those changes
       state.totalTasks += 1;
     },
-    decrement: (state) => {
-      state.totalTasks -= 1;
-    },
     // Use the PayloadAction type to declare the contents of `action.payload`
-    addNewTask: (state, action: PayloadAction<number>) => {
+    addNewTask: (state, action: PayloadAction<TaskListItem>) => {
       state.totalTasks += 1;
-      state.value += action.payload;
+      state.taskList.push(action.payload);
     },
     // Use the PayloadAction type to declare the contents of `action.payload`
-    editCurrentTask: (state, action: PayloadAction<number>) => {
-      state.value += action.payload;
+    editCurrentTask: (state, action: PayloadAction<TaskListItem>) => {
+      const [ currTaskName ]: [string] = [action.payload.taskName ];
+      // find taskListItem in taskList Array with the matching taskName value
+      state.taskList.forEach(item => {
+        if (item['taskName'] === currTaskName) {
+          // replace that taskListItem from the taskListArray
+          Object.assign(item, action.payload);
+        }
+      });
+      // add the edited taskListItem to the taskListArray
+      state.taskList.push(action.payload);
+    },
+    // Use the PayloadAction type to declare the contents of `action.payload`
+    deleteTask: (state, action: PayloadAction<TaskListItem>) => {
+      const [ currTaskName ]: [string] = [action.payload.taskName ];
+      // find taskListItem in taskList Array with the matching taskName value
+      state.taskList.forEach((item, index) => {
+        if (item['taskName'] === currTaskName) {
+          // remove that taskListItem from the taskListArray
+          // splice method: remove 1 element at index
+          state.taskList.splice(index, 1);
+        }
+      });
     },
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
@@ -79,7 +109,7 @@ export const tasksSlice = createSlice({
       })
       .addCase(getTasksAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.value += action.payload;
+        // state.value += action.payload;
       })
       .addCase(getTasksAsync.rejected, (state) => {
         state.status = 'failed';
@@ -87,7 +117,7 @@ export const tasksSlice = createSlice({
   },
 });
 
-export const { increment, decrement, addNewTask, editCurrentTask } = tasksSlice.actions;
+export const { increment, addNewTask, editCurrentTask, deleteTask } = tasksSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
@@ -96,13 +126,13 @@ export const selectTask = (state: RootState) => state.tasks;
 
 // We can also write thunks by hand, which may contain both sync and async logic.
 // Here's an example of conditionally dispatching actions based on current state.
-export const getTasksThunk =
-  (tasks: (string | number)[]): AppThunk =>
-  (dispatch, getState) => {
-    const currentValue = selectTasks(getState());
-    if (currentValue % 2 === 1) {
-      dispatch(incrementByAmount(amount));
-    }
-  };
+// export const getTasksThunk =
+//   (tasks: (string | number)[]): AppThunk =>
+//   (dispatch, getState) => {
+//     const currentValue = selectTasks(getState());
+//     if (currentValue % 2 === 1) {
+//       dispatch(incrementByAmount(amount));
+//     }
+//   };
 
 export default tasksSlice.reducer;
