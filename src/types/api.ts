@@ -25,6 +25,12 @@ export enum PlantModel { Flower = 'Flower', Cactus = 'Cactus' }
 export enum Frequency { Weekly = 'Weekly', Daily ='Daily', Hours12 ='2x Daily'}
 
 /**
+ * Async status options.
+ * @values idle, loading, failed
+ */
+ export enum asyncStatus { idle = 'idle', loading ='loading', failed ='failed'}
+
+/**
  * Data related to the user which should be retrieved by the front-end upon app initialization.
  */
 export type userData = {
@@ -33,6 +39,7 @@ export type userData = {
   points: number,
   currentStreak: number,
   longestStreak: number,
+  asyncStatus: asyncStatus,
 }
 
 /**
@@ -40,11 +47,22 @@ export type userData = {
  */
 export type Task = {
   id: string,
-  name: string,
+  taskName: string,
+  plantName: string,
   model: PlantModel,
   status: Status,
   Frequency: Frequency,
   actionCount: number,
 }
 
+/**
+ * For use in AJAX requests.
+ * @values get, post, patch, delete
+ */
+ export enum Method { 
+  POST = 'Great', // Create
+  GET = 'GET', // Read
+  PATCH = 'PATCH', // Update
+  DELETE = 'DELETE', // Destroy
+}
 

@@ -1,36 +1,27 @@
+import { popperOffsets } from '@popperjs/core';
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { getNameOfJSDocTypedef } from 'typescript';
 import { RootState, AppThunk } from '../../store/store';
-import { fetchOptions } from './optionsAPI';
 import { fetchTasks } from './tasksAPI';
+import { userData, Task, Status, PlantModel, Frequency, asyncStatus, Method } from '../../../types/api'
 
-// establish types for state items starting with individual task list items
-interface TaskListItem {
-  taskName: string; plantName: string; taskDuration: string; plantType: string;
-}
+export const initialTask: Task = {
+  id: 'demo task',
+  taskName: 'Drink water',
+  plantName: 'Henry',
+  model: PlantModel.Flower,
+  status: Status.Great,
+  Frequency: Frequency.Hours12,
+  actionCount: 0,
+};
 
-// our task list holds 1 to many TaskListItems
-interface taskListType extends Array<TaskListItem>{}
-
-// for the purpose of future expasion we didn't specificy an interface for OptionListItem
-// but we did esure it comes in an array
-interface optionsListType extends Array<any>{}
-
-export interface TaskState {
-  totalTasks: number;
-  taskList: taskListType,
-  optionsList: optionsListType,
-  status: 'idle' | 'loading' | 'failed';
-}
-
-const initialState: TaskState = {
-  totalTasks: 1,
-  taskList: [{ 
-    taskName: 'Drink water', 
-    plantName: 'Henry', 
-    taskDuration: 'Twice per day', 
-    plantType: 'cactus'}],
-  optionsList: [],
-  status: 'idle'
+export const initialState: userData = {
+  id: 'demo user',
+  tasks: [ initialTask ],
+  points: 0,
+  currentStreak: 0,
+  longestStreak: 0,
+  asyncStatus: asyncStatus.idle,
 };
 
 // The function below is called a thunk and allows us to perform async logic. It
@@ -38,21 +29,27 @@ const initialState: TaskState = {
 // will call the thunk with the `dispatch` function as the first argument. Async
 // code can then be executed and other actions can be dispatched. Thunks are
 // typically used to make async requests.
-export const getTasksAsync = createAsyncThunk(
-  'tdd/fetchTasks',
-  async (currTasks: (string | number)[]) => {
-    const response = await fetchTasks(currTasks = []);
-    // The value we return becomes the `fulfilled` action payload
-    return response.data;
-  }
-);
 
-export const getOptionsAsync = createAsyncThunk(
-  'tdd/fetchOptions',
-  async (currOptions: (string | number)[]) => {
-    const response = await fetchOptions(currOptions = []);
-    // The value we return becomes the `fulfilled` action payload
-    return response.data;
+// thunks can take one arguments so we will send one object with multiple properties
+interface Updates {
+  method: Method,
+  changedTask: Task,
+}
+
+export const TasksToServerAsync = createAsyncThunk( 
+  'fetchTasks', //names can appear in the redux dev tools
+  async (updates: Updates) => {
+    if(updates.method = Method.GET) {
+      // fetch without body
+      const response = await fetchTasks('/api/tasks');
+      // The value we return becomes the `fulfilled` action payload
+      return response.data;
+    } else {
+      // fetch with body
+      
+      // The value we return becomes the `fulfilled` action payload
+      return response.data;
+    }
   }
 );
 
@@ -60,79 +57,95 @@ export const tasksSlice = createSlice({
   name: 'task',
   initialState,
   // The `reducers` field lets us define reducers and generate associated actions
+  // Redux Toolkit allows us to write "mutating" logic in reducers. It
+  // doesn't actually mutate the state because it uses the Immer library,
+  // which detects changes to a "draft state" and produces a brand new
+  // immutable state based off those changes
   reducers: {
-    // increment is here as an example for testing (will be removed)
     increment: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
-      state.totalTasks += 1;
+      state.points += 1;
     },
-    // Use the PayloadAction type to declare the contents of `action.payload`
-    addNewTask: (state, action: PayloadAction<TaskListItem>) => {
-      state.totalTasks += 1;
-      state.taskList.push(action.payload);
-    },
-    // Use the PayloadAction type to declare the contents of `action.payload`
-    editCurrentTask: (state, action: PayloadAction<TaskListItem>) => {
-      const [ currTaskName ]: [string] = [action.payload.taskName ];
-      // find taskListItem in taskList Array with the matching taskName value
-      state.taskList.forEach(item => {
-        if (item['taskName'] === currTaskName) {
-          // replace that taskListItem from the taskListArray
-          Object.assign(item, action.payload);
-        }
-      });
-      // add the edited taskListItem to the taskListArray
-      state.taskList.push(action.payload);
-    },
-    // Use the PayloadAction type to declare the contents of `action.payload`
-    deleteTask: (state, action: PayloadAction<TaskListItem>) => {
-      const [ currTaskName ]: [string] = [action.payload.taskName ];
-      // find taskListItem in taskList Array with the matching taskName value
-      state.taskList.forEach((item, index) => {
-        if (item['taskName'] === currTaskName) {
-          // remove that taskListItem from the taskListArray
-          // splice method: remove 1 element at index
-          state.taskList.splice(index, 1);
-        }
-      });
+    decrement: (state) => {
+      state.points -= 1;
     },
   },
   // The `extraReducers` field lets the slice handle actions defined elsewhere,
-  // including actions generated by createAsyncThunk or in other slices.
+  // all reducers that need an async call go here, including actions generated by 
+  // createAsyncThunk or in other slices.
+
+  // while status is loading, we want to change the test on the frontend for that value? it turns grey so its updated but can't be clicked again
+  //the state can be differfrent while the async database communcaation is happening 
+  // if it fails it will revert back? (need to save a copy of state from before the async call (save a copy of the state as closure in the saync function))
+
   extraReducers: (builder) => {
     builder
-      .addCase(getTasksAsync.pending, (state) => {
-        state.status = 'loading';
+      .addCase(TasksToServerAsync.pending, (state) => {
+        state.asyncStatus = asyncStatus.loading;
       })
-      .addCase(getTasksAsync.fulfilled, (state, action) => {
-        state.status = 'idle';
+      .addCase(TasksToServerAsync.fulfilled, (state, action) => {
+        state.asyncStatus = asyncStatus.idle;
         // state.value += action.payload;
       })
-      .addCase(getTasksAsync.rejected, (state) => {
-        state.status = 'failed';
+      .addCase(TasksToServerAsync.rejected, (state) => {
+        state.asyncStatus = asyncStatus.failed;
       });
   },
 });
 
-export const { increment, addNewTask, editCurrentTask, deleteTask } = tasksSlice.actions;
+export const { increment, decrement, TasksToServerAsync, addNewTask, editFrequency, updateTask, deleteTask } = tasksSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
 export const selectTask = (state: RootState) => state.tasks;
 
-// We can also write thunks by hand, which may contain both sync and async logic.
-// Here's an example of conditionally dispatching actions based on current state.
-// export const getTasksThunk =
-//   (tasks: (string | number)[]): AppThunk =>
-//   (dispatch, getState) => {
-//     const currentValue = selectTasks(getState());
-//     if (currentValue % 2 === 1) {
-//       dispatch(incrementByAmount(amount));
-//     }
-//   };
-
 export default tasksSlice.reducer;
+
+
+
+
+// Use the PayloadAction type to declare the contents of `action.payload`
+addNewTask: (state, action: PayloadAction<TaskListItem>) => {
+  state.totalTasks += 1;
+  // options loaded in react 
+
+  // do i check for dupes or is that a backend thing?
+  state.taskList.push(action.payload);
+},
+// Use the PayloadAction type to declare the contents of `action.payload`
+editFrequency: (state, action: PayloadAction<TaskListItem>) => {
+  const [ currTaskName ]: [string] = [action.payload.taskName ];
+  // find taskListItem in taskList Array with the matching taskName value
+  state.taskList.forEach(item => {
+    if (item['taskName'] === currTaskName) {
+      // replace that taskListItem from the taskListArray
+      Object.assign(item, action.payload);
+    }
+  });
+  // add the edited taskListItem to the taskListArray
+  state.taskList.push(action.payload);
+},
+// Use the PayloadAction type to declare the contents of `action.payload`
+updateTask: (state, action: PayloadAction<TaskListItem>) => {
+
+
+  //issue an async thunk and put issue the fetch patch request to update task i nteh backend
+// edit frequency and update task, both same kind of fetch
+
+  // add the edited taskListItem to the taskListArray
+  state.taskList.push(action.payload);
+},
+// Use the PayloadAction type to declare the contents of `action.payload`
+deleteTask: (state, action: PayloadAction<TaskListItem>) => {
+  const [ currTaskName ]: [string] = [action.payload.taskName ];
+  // find taskListItem in taskList Array with the matching taskName value
+  state.taskList.forEach((item, index) => {
+    if (item['taskName'] === currTaskName) {
+      // remove that taskListItem from the taskListArray
+      // splice method: remove 1 element at index
+      state.taskList.splice(index, 1);
+    }
+  });
+},
+
+*/
