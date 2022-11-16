@@ -151,8 +151,8 @@ class AuthModel {
 	}
 
 	public static logout(req: Request, res: Response, next: NextFunction){
-
-		
+    res.removeHeader('authorization');
+		next();
 	}
 
 	//upon successful login or signup, create a JWT token
@@ -182,7 +182,11 @@ class AuthModel {
 		if (token === null) return res.sendStatus(401)
 
 		jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err:any, user:any) => {
-			if (err) return res.sendStatus(403)
+			if (err) {
+				res.removeHeader('authorization')
+				return res.sendStatus(403)
+			}
+
 			res.locals.user = user.id
 			console.log(res.locals.user);
 			next();
