@@ -57,9 +57,30 @@ describe('Auth route tests', () => {
 			expect(res.body).toBe({error:'username taken'})
 		})
 
+		it('the password should be hashed before inserting into the database', async () => {
+			//how to write this test?
+		})
 
 		afterAll(done => {
 			server ? server.close(done) : null;
+		})
+	})
+
+	describe('JWT Tokens', () => {
+		let server: Server | null = null;
+		let request = null;
+
+		beforeAll((done) => {
+			server = app.listen(done);
+			request = supertest.agent(server);
+		});
+
+		it('JWT Tokens should be generated on login', async() => {
+		  const res = await supertest(app)
+			.post('/api/auth/create')
+		  .send({username: 'jonathan', password: '123456'})
+		  expect(res.headers).toBe(200)
+		  expect(res.headers.authorization).not.toBe(undefined);
 		})
 	})
 

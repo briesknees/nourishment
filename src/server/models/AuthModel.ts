@@ -96,11 +96,6 @@ class AuthModel {
 
 	}
 
-	//sets the cookie to the jwt token????
-	public static setCookie(req: Request, res: Response, next: NextFunction){
-		
-	}
-
 	public static deleteUser(req: Request, res: Response, next: NextFunction){
 
 		
