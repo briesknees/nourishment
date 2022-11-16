@@ -3,9 +3,19 @@ import express from 'express';
 import { request } from 'http';
 import bcrypt from 'bcrypt';
 import config from '.././constants/config';
-const pg = require("pg");
+const { Pool } = require("pg");
 const jwt = require ('jsonwebtoken')
 require('dotenv').config()
+
+const pool = new Pool({
+  host: config.host,
+  user: config.user,
+  password: config.password,
+  database: config.database,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+  ssl: true,
+});
 
 class AuthModel {
 
@@ -18,20 +28,21 @@ class AuthModel {
 		try {
 			//query to find the user in teh database
 			const verifyUserQuery = `
-			SELECT * FROM users;`
-		//	WHERE username = $1`;
-      const db = pg.client(config);
-			const verifyResult = await db.query(verifyUserQuery, param);
-			console.log(verifyResult)
+			SELECT * FROM users
+			WHERE username = $1;`;
+			pool.query(verifyUserQuery, param)
+			.then((response:any) => {
+				console.log(response)
+				if (response.rows.length === 0){
+					res.locals.status = true;
+				}
+				else{
+					res.locals.status = false;
+				}
+				return next();
+			})
 			//user does not exist in database
-			if (verifyResult.rows.length === 0){
-				res.locals.status === true;
-			}
 			//if username already taken
-			else{
-				res.locals.status === false;
-			}
-			return next();
 			
 		}
 		catch(error){
@@ -56,6 +67,9 @@ class AuthModel {
 			if (!username || !password) {
 				return res.status(401).json({ error: 'username or password parameter empty' });
 			}
+			if (!email){
+				return res.status(401).json({ error: 'email parameter empty' });
+			}
 
 			//hash passwords asynchronously before storing it in db
 			const saltRounds = 10;
@@ -69,16 +83,20 @@ class AuthModel {
 
       //queries the db and inserts the user into the database
 				const params = [{value: username, type: 'VARCHAR'}, {value: hash, type: 'VARCHAR'}, {value: email, type: 'VARCHAR'}]
+				const testParams = [username, hash, email]
 				const newUserQuery = `
           INSERT INTO users(username, password, email)
-          VALUES($1 AS VARCHAR,$2 AS VARCHAR, $3 AS VARCHAR)
+          VALUES($1,$2, $3)
           RETURNING *;`;
-				const db = new pg.client(config);
-				const result = db.query(newUserQuery, params)
-				console.log('result')
-				console.log(result);
-				res.locals.username = result.rows[0].username;
-				next();
+
+				pool.query(newUserQuery, testParams)
+				.then((result:any) => {
+
+					console.log('result')
+					console.log(result.rows[0]);
+					res.locals.username = result.rows[0].username;
+					next();
+				})
 			})
 		}
 		catch (error) {
@@ -99,22 +117,29 @@ class AuthModel {
 		//query the database for the username and retrieve teh passowrd
 		const params = [{value: username, type: 'VARCHAR'}]
     
-		const query = 'placeholder'
-		//
-		const db = new pg.client(config);
-		const userData = await db.query(query, [username])
-		if (userData.rows[0] === undefined){
-			return res.status(401).json({error: "username not found"})
-		}
-		const dbPassword = userData.rows[0].password;
-		bcrypt.compare(password, dbPassword, (err, result) => {
-			if (result === true){
+		const query = `SELECT * FROM users WHERE username = $1;`;
 
+		pool.query(query, [username])
+		.then((userData:any) => {
+
+			if (userData.rows[0] === undefined){
+				return res.status(401).json({error: "username not found"})
 			}
-			else if (result === false){
-      
-			}
-			
+			const dbPassword = userData.rows[0].password;
+			res.locals.username = userData.rows[0].username;
+			console.log(dbPassword)
+			bcrypt.compare(password, dbPassword, (err, result) => {
+				if (result === true){
+					console.log('successful login')
+					res.locals.status = true;
+					return next()
+				}
+				else if (result === false){
+					console.log('incorrectlogin')
+					return next()
+				}
+				
+			})
 		})
 
 
@@ -133,6 +158,9 @@ class AuthModel {
 	//upon successful login or signup, create a JWT token
 	public static setJWT(req: Request, res: Response, next: NextFunction){
 		//generate the token, then set the res.headers [authorization to the jwt token]
+		if (res.locals.status === false){
+			return next()
+		}
 		const { username } = req.body;
     const user = {id: username}
 		const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn:'48h'})
@@ -163,7 +191,9 @@ class AuthModel {
 
 
 	public static setHeader(req: Request, res: Response, next: NextFunction){
-    res.setHeader('authorization', 'Bearer ' + res.locals.accessToken)
+		if (res.locals.accessToken){
+			res.setHeader('authorization', 'Bearer ' + res.locals.accessToken)
+		}
 		next()
 	}
 }

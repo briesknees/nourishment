@@ -49,20 +49,20 @@ export async function SelectRecords(params: SelectQuery) {
 }
 
 export async function CreateTable(params: CreateTableQuery) {
-  // let str = `CREATE TABLE ${params.name} `;
-  // let attributesString = "(";
-  // const queryParams: string[] = [];
+  let str = `CREATE TABLE ${params.name} `;
+  let attributesString = "(";
+  const queryParams: string[] = [];
 
-  // params.attributes.forEach((e, i) => {
-  //   attributesString += `$${i + 1} ${e[1]}`;
-  //   i < params.attributes.length - 1 ? (attributesString += ",") : null;
-  //   queryParams.push(e[0]);
-  // });
+  params.attributes.forEach((e, i) => {
+    attributesString += `$${i + 1} ${e[1]}`;
+    i < params.attributes.length - 1 ? (attributesString += ",") : null;
+    queryParams.push(e[0]);
+  });
 
-  // str += `${attributesString}` + ");";
+  str += `${attributesString}` + ");";
 
-  // // console.log( await query('SELECT $1 FROM inventory;', ["*"]));
-  // return query(str, queryParams);
+  // console.log( await query('SELECT $1 FROM inventory;', ["*"]));
+  return query(str, queryParams);
 }
 
 export function InsertRecords(params: InsertQuery) {

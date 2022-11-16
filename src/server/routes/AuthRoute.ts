@@ -7,7 +7,7 @@ const router = express.Router();
 router.post('/create', AuthController.checkUser, AuthController.createUser, AuthController.setJWT, AuthController.setHeader, (req: Request, res : Response, next : NextFunction) =>
 { 
   if (res.locals.status === true){
-		return res.status(200).json(res.locals.username); 
+		return res.status(200).json({username:res.locals.username}); 
 	}
 	else{
 		return res.status(401).json({error: 'username taken'})
@@ -17,7 +17,7 @@ router.post('/create', AuthController.checkUser, AuthController.createUser, Auth
 router.post('/login', AuthController.login, AuthController.setJWT, AuthController.setHeader, (req: Request, res : Response, next : NextFunction) =>
 { 
 	if (res.locals.status === true){
-		res.status(200).json(); 
+		res.status(200).json({username: res.locals.username}); 
 	}
 	else{
 		res.status(401).json({error: 'invalid username or password'})
