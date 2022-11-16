@@ -1,4 +1,8 @@
-import { userData, Task, Status, PlantModel, Frequency, asyncStatus } from '../../../types/api'
+import { Task, Status, PlantModel, Frequency, asyncStatus } from '../../../types/api';
+/* This test file tests the reducer functions for tasks. It confirms increases
+and deacreased to user points as well as the ability to add, update, and delete tasks. 
+There are a variety of updates tested including updates to a task's frequency,
+action count, and status. */
 
 import tasksReducer, {
     initialState,

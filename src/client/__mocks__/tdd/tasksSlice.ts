@@ -29,6 +29,17 @@ export const initialState: userData = {
 // will call the thunk with the `dispatch` function as the first argument. Async
 // code can then be executed and other actions can be dispatched. Thunks are
 // typically used to make async requests.
+export const FetchTasksAsync = createAsyncThunk<Task[]>(
+  // The first argument is the action name:
+  'fetch/getTasks', //action names can appear in the redux dev tools
+  async () => {
+    const response = await fetch('/api/tasks');
+    // Also, set a type for the `data` constant:
+    const data: Task[] = await response.json();
+    // The value we return becomes the `fulfilled` action payload
+    return data;
+  }
+);
 
 // thunks can take one arguments so we will send one object with multiple properties
 interface Updates {
@@ -36,20 +47,19 @@ interface Updates {
   changedTask: Task,
 }
 
-export const TasksToServerAsync = createAsyncThunk( 
-  'fetchTasks', //names can appear in the redux dev tools
+export const UpdateTasksAsync = createAsyncThunk<
+  Task,
+  Method,
+  Updates,
+>(
+  // The first argument is the action name:
+  'fetch/updateTasks', //action names can appear in the redux dev tools
   async (updates: Updates) => {
-    if(updates.method = Method.GET) {
-      // fetch without body
-      const response = await fetchTasks('/api/tasks');
-      // The value we return becomes the `fulfilled` action payload
-      return response.data;
-    } else {
-      // fetch with body
-      
-      // The value we return becomes the `fulfilled` action payload
-      return response.data;
-    }
+    const response = await fetch('/api/tasks', updates);
+    // Also, set a type for the `data` constant:
+    const data: Task[] = await response.json();
+    // The value we return becomes the `fulfilled` action payload
+    return data;
   }
 );
 
@@ -79,20 +89,20 @@ export const tasksSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(TasksToServerAsync.pending, (state) => {
+      .addCase(FetchTasksAsync.pending, (state) => {
         state.asyncStatus = asyncStatus.loading;
       })
-      .addCase(TasksToServerAsync.fulfilled, (state, action) => {
+      .addCase(FetchTasksAsync.fulfilled, (state, action) => {
         state.asyncStatus = asyncStatus.idle;
-        // state.value += action.payload;
+        state.tasks = action.payload;
       })
-      .addCase(TasksToServerAsync.rejected, (state) => {
+      .addCase(FetchTasksAsync.rejected, (state) => {
         state.asyncStatus = asyncStatus.failed;
       });
   },
 });
 
-export const { increment, decrement, TasksToServerAsync, addNewTask, editFrequency, updateTask, deleteTask } = tasksSlice.actions;
+export const { increment, decrement, extraReducers, addNewTask, editFrequency, updateTask, deleteTask } = tasksSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
@@ -102,7 +112,7 @@ export const selectTask = (state: RootState) => state.tasks;
 export default tasksSlice.reducer;
 
 
-
+/*
 
 // Use the PayloadAction type to declare the contents of `action.payload`
 addNewTask: (state, action: PayloadAction<TaskListItem>) => {

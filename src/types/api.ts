@@ -62,7 +62,8 @@ export type Task = {
  export enum Method { 
   POST = 'Great', // Create
   GET = 'GET', // Read
-  PATCH = 'PATCH', // Update
+  PATCH = 'PATCH', // Update part
+  PUT = 'PUT', // Update whole
   DELETE = 'DELETE', // Destroy
 }
 
