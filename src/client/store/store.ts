@@ -1,9 +1,11 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import counterReducer from '.././__mocks__/counter/counterSlice';
+import tasksReducer from '../__mocks__/tdd/tasksSlice'
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
+    tasks: tasksReducer,
   },
 });
 
