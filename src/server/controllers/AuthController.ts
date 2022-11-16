@@ -6,11 +6,11 @@ import AuthModel from '../models/AuthModel';
 class AuthController {
   
 	public static checkUser(req: Request, res: Response, next: NextFunction ) {
-    AuthModel.checkUser(req, res, next)
+    //AuthModel.checkUser(req, res, next)
 	}
 
 	public static createUser(req: Request, res: Response, next: NextFunction ) {
-    AuthModel.createUser(req,res,next);
+   // AuthModel.createUser(req,res,next);
 	}
 	
 	public static login(req: Request, res: Response, next: NextFunction ) {

@@ -60,7 +60,11 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.0",
     "@testing-library/react": "^13.4.0",
+    "@types/bcrypt": "^5.0.0",
+    "@types/cookie-parser": "^1.4.3",
     "@types/react-redux": "^7.1.24",
+    "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "express": "^4.18.1",
     "pg": "^8.8.0",

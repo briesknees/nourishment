@@ -29,5 +29,9 @@ router.delete('/delete', AuthController.checkJWT, AuthController.deleteUser, (re
 		res.status(200).json(); 
 });
 
+router.post('/test', AuthController.setJWT, (req: Request, res : Response, next : NextFunction) =>
+{ 
+		res.status(200).json(res.locals.accessToken); 
+});
 
 export default router;

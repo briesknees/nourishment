@@ -1,15 +1,19 @@
-import express from "express";
-import cors from "cors";
-
-import authRouter from "./routes/AuthRoute";
-import taskRouter from "./routes/TaskRoute";
-import userRouter from "./routes/UserRoute";
+import exp from 'constants';
+import express from 'express'
+const cors = require('cors');
+import cookieParser from 'cookie-parser';
+import authRouter from './routes/AuthRoute'
+import taskRouter from './routes/TaskRoute'
+import userRouter from './routes/UserRoute'
 
 const app = express();
 
-app.use("/api/tasks", taskRouter);
-app.use("/api/auth", authRouter);
-app.use("/api/user", userRouter);
+app.use(express.json())
+app.use(cookieParser())
+
+app.use('/api/tasks', taskRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/user', userRouter);
 
 app.use(cors({ origin: "http://localhost:3000" }));
 
