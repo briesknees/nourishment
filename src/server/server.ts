@@ -1,10 +1,13 @@
 import exp from 'constants';
 import express from 'express'
-const cors = require('cors');
 import cookieParser from 'cookie-parser';
 import authRouter from './routes/AuthRoute'
 import taskRouter from './routes/TaskRoute'
 import userRouter from './routes/UserRoute'
+import cors from "cors";
+
+
+import { CreateTable, SelectRecords } from "./models/DatabaseModel";
 
 const app = express();
 
@@ -23,5 +26,17 @@ app.get("/api/", (req: express.Request, res: express.Response) => {
 });
 
 console.log(process.env.AZURE_PSQL_PORT);
+
+console.log(
+  SelectRecords({
+    table: "users",
+    attributes: [{
+      value: "*",
+      type: "email",
+      },
+    ],
+    
+  })
+);
 
 export default app;

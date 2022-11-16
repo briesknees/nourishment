@@ -1,6 +1,9 @@
 export interface SelectQuery {
   table: string;
-  attributes?: string[];
+  attributes?: {
+    value: string;
+    type: string;
+  }[];
   conditions?: {
     where?: string;
     //...
