@@ -1,14 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
-import express from 'express';
+import { Request, Response, NextFunction } from "express";
+import express from "express";
 
 const router = express.Router();
 
-router.post('/create', (req: Request, res : Response, next : NextFunction) =>
-{ 
-  console.error('AuthRouter.Post: Not Yet Implemented'); 
-  res.sendStatus(501); 
+router.post("/create", (req: Request, res: Response, next: NextFunction) => {
+  console.error("AuthRouter.Post: Not Yet Implemented");
+  res.sendStatus(501);
 });
-
-
 
 export default router;
