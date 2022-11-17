@@ -64,6 +64,7 @@
     "@testing-library/user-event": "^14.4.3",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
+    "@types/pg": "^8.6.5",
     "@types/react-lottie": "^1.2.6",
     "@types/react-redux": "^7.1.24",
     "bcrypt": "^5.1.0",
