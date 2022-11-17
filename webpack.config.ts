@@ -57,7 +57,7 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            title: 'Andrew\'s Page', // This is referenced in template.html and auto-inserted when we build
+            title: 'We tried TDD', // This is referenced in template.html and auto-inserted when we build
             filename: 'index.html',
             template: 'src/client/template.html',
         })

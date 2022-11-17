@@ -10,7 +10,7 @@ import {
   Frequency,
   asyncStatus,
   Method,
-} from "../../../types/api";
+} from "../../types/api";
 
 import tasksReducer, {
   initialState,

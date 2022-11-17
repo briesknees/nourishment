@@ -1,7 +1,7 @@
 // import { popperOffsets } from "@popperjs/core";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { getNameOfJSDocTypedef } from "typescript";
-import { RootState, AppThunk } from "../../store/store";
+import { RootState, AppThunk } from "../store/store";
 import { fetchTasks } from "./tasksAPI";
 import {
   userData,
@@ -10,9 +10,7 @@ import {
   PlantModel,
   Frequency,
   asyncStatus,
-} from "../../../types/api";
-import { response } from "express";
-import { request } from "http";
+} from "../../types/api";
 
 export const initialTask: Task = {
   id: "demo task",
@@ -44,17 +42,21 @@ export const UpdateTasksAsync = createAsyncThunk(
   "fetch/updateTasks", //action names can appear in the redux dev tools
   // @param arg { endpoint: endpoint, request: {} }
   async (args: any) => {
-    const { endpoint, request } = args;
+    const { endpoint, request } = args; //variable deconstruction
     const response = await fetch(endpoint, request);
-    // catch errors from fetch
-    if (!response.ok) {
-      const message = `An error has occured: ${response.status}`;
-      throw new Error(message);
-    }
+    console.log("Fetching from:", endpoint);
+    console.log("Fetch request details:", request);
+
+    // // catch errors from fetch
+    // if (!response.ok) {
+    //   const message = `An error has occured: ${response.status}`;
+    //   throw new Error(message);
+    // }
     // Also, set a type for the `data` constant:
-    const data: Task[] = await response.json();
+    console.log("UpdateTaskAsync response: ", response);
+    const data: any = await response.json();
     // The value we return becomes the `fulfilled` action payload
-    console.log(data);
+    console.log("data: ", data);
     return data;
   }
 );
@@ -86,7 +88,7 @@ export const tasksSlice: any = createSlice({
         // while status is loading, we want to change the test on the frontend
         // for that value? it turns grey so its updated but can't be clicked again
       })
-      .addCase(UpdateTasksAsync.fulfilled, (state, action) => {
+      .addCase(UpdateTasksAsync.fulfilled, (state, action: PayloadAction<any>) => {
         state.asyncStatus = asyncStatus.idle;
         state.tasks = action.payload;
       })

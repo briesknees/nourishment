@@ -1,11 +1,21 @@
-import React, {useEffect, useState } from 'react';
-import tasksSlice from '../redux/tasksSlice';
+import React, { useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { UpdateTasksAsync } from "../redux/tasksSlice";
 
-// need to write tests that augment these variables with redux
+export const ShelfStatus = (): JSX.Element => {
+//   const tasks: Task[] = useAppSelector((state) => state.tasks);
+
+//   useEffect(() => {
+//     useAppDispatch(UpdateTasksAsync("/api/tasks"));
+//   }, []);
+
+// // need to write tests that augment these variables with redux
 const shelfHealth = "null";
 const shelfPoints = "null";
 
-export const ShelfStatus = (): JSX.Element => {
+
+
+
   return (
     <div>
       <h1>Arboretum Status</h1>
@@ -14,4 +24,3 @@ export const ShelfStatus = (): JSX.Element => {
     </div>
   );
 };
-

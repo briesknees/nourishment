@@ -5,6 +5,7 @@ import { LoginProps } from "../../types/front-end";
 export const Login = ({ loginHandler }: LoginProps): JSX.Element => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [signup, toggleSignUp] = useState(false);
   // useState for username/password
   // Separate login/signup, set signup status as a state variable as well
@@ -65,6 +66,15 @@ export const Login = ({ loginHandler }: LoginProps): JSX.Element => {
       {signup ? (
         <div>
           <p>Sign Up</p>
+          <input
+            type="text"
+            className="email"
+            value={email}
+            onChange={(e) => {
+              setEmail(e.target.value);
+            }}
+            required
+          />
           <button
             className="signupButton"
             onClick={() => {

@@ -23,6 +23,7 @@ const App = () => {
     // If logge in, render Arboretum component; else render Login Component
     <div className="Home">
       {LoggedIn ? <Arboretum /> : <Login loginHandler={loginHandler} />}
+      {/* <Arboretum /> */}
     </div>
   );
 };
