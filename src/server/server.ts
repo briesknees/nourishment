@@ -6,9 +6,6 @@ import taskRouter from './routes/TaskRoute'
 import userRouter from './routes/UserRoute'
 import cors from "cors";
 
-
-import { CreateTable, SelectRecords } from "./models/DatabaseModel";
-
 const app = express();
 
 app.use(express.json())
@@ -24,19 +21,5 @@ app.get("/api/", (req: express.Request, res: express.Response) => {
   res.statusCode = 200;
   return res.json({ title: "Coding in Progress" });
 });
-
-console.log(process.env.AZURE_PSQL_PORT);
-
-console.log(
-  SelectRecords({
-    table: "users",
-    attributes: [{
-      value: "*",
-      type: "email",
-      },
-    ],
-    
-  })
-);
 
 export default app;
